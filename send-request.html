@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Send Your Request on WhatsApp | Noluthando's sewing &amp; Alterations</title>
+    <meta name="theme-color" content="#b27b38">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="site-header" role="banner">
+        <div class="wrap header-inner">
+            <a class="logo" href="index.html" aria-label="Noluthando's sewing & Alterations home">
+                <span class="logo-mark" aria-hidden="true"><span class="logo-icon"></span></span>
+                <span>
+                    <span class="logo-text">Noluthando's sewing &amp; Alterations</span>
+                    <span class="logo-tagline">Katlehong, GP</span>
+                </span>
+            </a>
+            <div class="header-cta">
+                <a class="btn btn-small btn-outline" href="index.html#contact">&larr; Back to form</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="request-page">
+        <div class="wrap">
+            <section class="request-card" aria-labelledby="req-title">
+                <h1 id="req-title">Send your request on WhatsApp</h1>
+                <p class="request-sub">Check your details below, then tap the button to send them to us on WhatsApp.</p>
+
+                <dl class="request-summary" id="summary"></dl>
+
+                <div class="request-actions">
+                    <a class="btn btn-large btn-whatsapp" id="waButton" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+                    <a class="btn btn-large btn-outline" href="index.html#contact">Edit request</a>
+                </div>
+                <p class="request-note" id="requestNote">WhatsApp will open with your message already written. Just press send. You can also attach photos of your items in the chat.</p>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            var WHATSAPP_NUMBER = '27609033779'; // +27 60 903 3779
+            var params = new URLSearchParams(window.location.search);
+            var get = function (k) { return (params.get(k) || '').trim(); };
+
+            var data = {
+                name: get('name'),
+                phone: get('phone'),
+                email: get('email'),
+                service: get('service'),
+                message: get('message')
+            };
+
+            var summary = document.getElementById('summary');
+            var button = document.getElementById('waButton');
+            var note = document.getElementById('requestNote');
+
+            if (!data.name || !data.message) {
+                summary.innerHTML = '';
+                var p = document.createElement('p');
+                p.textContent = 'We couldn’t find your request details. Please go back and fill in the form.';
+                summary.appendChild(p);
+                button.textContent = 'Go to the form';
+                button.removeAttribute('target');
+                button.href = 'index.html#contact';
+                note.hidden = true;
+                return;
+            }
+
+            var rows = [
+                ['Name', data.name],
+                ['Phone', data.phone],
+                ['Email', data.email],
+                ['Service', data.service],
+                ['Project details', data.message]
+            ];
+            rows.forEach(function (row) {
+                if (!row[1]) return;
+                var dt = document.createElement('dt');
+                var dd = document.createElement('dd');
+                dt.textContent = row[0];
+                dd.textContent = row[1];
+                summary.appendChild(dt);
+                summary.appendChild(dd);
+            });
+
+            var lines = [
+                'Hello Noluthando’s Sewing & Alterations, I’d like to request a quote.',
+                '',
+                'Name: ' + data.name
+            ];
+            if (data.phone) lines.push('Phone: ' + data.phone);
+            if (data.email) lines.push('Email: ' + data.email);
+            if (data.service) lines.push('Service: ' + data.service);
+            lines.push('', 'Details:', data.message);
+
+            button.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(lines.join('\n'));
+        })();
+    </script>
+</body>
+
+</html>
