@@ -1864,3 +1864,96 @@ select.error {
         scroll-behavior: auto;
     }
 }
+
+/* ── Send request (WhatsApp) page ── */
+.form-hint {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.request-page {
+    padding: 56px 0 80px;
+}
+
+.request-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 36px 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+}
+
+.request-card h1 {
+    margin: 0 0 6px;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.7rem, 4vw, 2.2rem);
+    line-height: 1.2;
+}
+
+.request-card .request-sub {
+    margin: 0 0 24px;
+    color: var(--text-soft);
+}
+
+.request-summary {
+    margin: 0 0 24px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+}
+
+.request-summary dt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.request-summary dd {
+    margin: 2px 0 14px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.request-summary dd:last-child {
+    margin-bottom: 0;
+}
+
+.request-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-whatsapp {
+    background: #1fa855;
+    border-color: #1fa855;
+}
+
+.btn-whatsapp:hover,
+.btn-whatsapp:focus-visible {
+    background: #178a45;
+    border-color: #178a45;
+    box-shadow: 0 14px 30px rgba(23, 138, 69, 0.28);
+}
+
+.request-note {
+    margin: 18px 0 0;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 560px) {
+    .request-card {
+        padding: 26px 20px;
+    }
+
+    .request-actions .btn {
+        width: 100%;
+    }
+}
