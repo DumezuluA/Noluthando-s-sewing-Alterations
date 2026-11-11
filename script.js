@@ -1,6 +1,7 @@
 /* Patel Sewing Studio — Enhanced Script */
 
-const CONTACT_ENDPOINT = 'contact.php';
+const WHATSAPP_NUMBER = '27609033779'; // +27 60 903 3779, international format, digits only
+const REQUEST_PAGE = 'send-request.html';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const FIELD_LIMITS = {
@@ -74,10 +75,7 @@ function validateFields(values, fieldMap) {
         hasError = true;
     }
 
-    if (!values.email) {
-        setFieldError(fieldMap.email.field, fieldMap.email.messageEl, 'Please enter your email address.');
-        hasError = true;
-    } else if (!EMAIL_REGEX.test(values.email)) {
+    if (values.email && !EMAIL_REGEX.test(values.email)) {
         setFieldError(fieldMap.email.field, fieldMap.email.messageEl, FORM_MESSAGES.email);
         hasError = true;
     }
@@ -177,7 +175,7 @@ if (scrollBtn) {
 // ── Contact form ──
 const form = document.getElementById('quoteForm');
 const statusEl = document.getElementById('formStatus');
-const submitButton = form ? .querySelector('button[type="submit"]') || null;
+const submitButton = form?.querySelector('button[type="submit"]') || null;
 const fieldMap = {
     name: {
         field: document.getElementById('name'),
@@ -215,52 +213,21 @@ if (form) {
             return;
         }
 
-        const submitted = buildSubmissionSummary(values);
-        const payload = {
-            name: values.name,
-            email: values.email,
-            phone: values.phone,
-            service: values.service,
-            message: values.message,
-            submitted_on: submitted.submittedDate,
-            full_message: submitted.fullMessage,
-        };
+        // Hand the request over to the WhatsApp page (nothing is stored on a server).
+        const params = new URLSearchParams();
+        Object.entries(values).forEach(([key, value]) => {
+            if (value) params.set(key, value);
+        });
 
-        const body = new FormData();
-        Object.entries(payload).forEach(([key, value]) => body.append(key, value));
+        setSubmitting(form, submitButton, true);
+        setStatus(statusEl, 'Opening your request...');
+        window.location.href = `${REQUEST_PAGE}?${params.toString()}`;
+    });
 
-        try {
-            setSubmitting(form, submitButton, true);
-            setStatus(statusEl, FORM_MESSAGES.sending);
-
-            const response = await fetch(CONTACT_ENDPOINT, {
-                method: 'POST',
-                body,
-                headers: {
-                    'X-Requested-With': 'fetch'
-                },
-            });
-
-            const contentType = response.headers.get('content-type') || '';
-            const data = contentType.includes('application/json') ? await response.json() : null;
-
-            if (!response.ok || !data) {
-                throw new Error(data ? .message || FORM_MESSAGES.failure);
-            }
-
-            if (!data.success) {
-                throw new Error(data.message || FORM_MESSAGES.failure);
-            }
-
-            form.reset();
-            clearFormErrors(fieldMap);
-            setStatus(statusEl, data.message || FORM_MESSAGES.success);
-        } catch (error) {
-            console.error('Contact form submission failed:', error);
-            setStatus(statusEl, error.message || FORM_MESSAGES.failure, true);
-        } finally {
-            setSubmitting(form, submitButton, false);
-        }
+    // Restore the button if the visitor comes back via the browser's back button.
+    window.addEventListener('pageshow', () => {
+        setSubmitting(form, submitButton, false);
+        setStatus(statusEl, '');
     });
 }
 
@@ -269,7 +236,7 @@ const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // ── Privacy modal ──
-document.getElementById('privacy-link') ? .addEventListener('click', e => {
+document.getElementById('privacy-link')?.addEventListener('click', e => {
     e.preventDefault();
     alert('Privacy Policy\n\nWe only use your contact details to respond to your inquiry. We do not sell, share, or distribute your personal data to any third parties.');
 });
