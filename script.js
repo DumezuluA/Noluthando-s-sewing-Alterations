@@ -1,4 +1,4 @@
-/* Patel Sewing Studio — Enhanced Script */
+
 
 const WHATSAPP_NUMBER = '27609033779'; // +27 60 903 3779, international format, digits only
 const REQUEST_PAGE = 'send-request.html';
